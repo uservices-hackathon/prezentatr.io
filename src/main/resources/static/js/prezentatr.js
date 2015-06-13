@@ -3,13 +3,9 @@ $(function () {
     newSlider('Water');
     newSlider('Hop');
     newSlider('Yiest');
-    newGauge('#aggregator', 'Agregatr.io');
     newGauge('#dojrzewatr', 'Dojrzewatr.io');
     newGauge('#butelkatr', 'Butelkatr.io');
-    newSolidGague('#malt', 'Malt');
-    newSolidGague('#water', 'Water');
-    newSolidGague('#hop', 'Hop');
-    newSolidGague('#yiest', 'Yiest');
+    newAggrgtrMetrics('#aggregator', 'Agregatr.io');
 });
 
 function newSlider(name) {
@@ -23,109 +19,69 @@ function newSlider(name) {
 			});
 }
 
-function newSolidGague(id, name) {
-var gaugeOptions = {
+function newAggrgtrMetrics(element, name) {
 
-        chart: {
-            type: 'solidgauge'
-        },
+            var brandsData = [["Malt", 30], ["Water", 600], ["Hop", 120], ["Yiest", 5]];
 
-        title: null,
 
-        pane: {
-            size: '100%',
-            startAngle: -90,
-            endAngle: 90,
-            background: {
-                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
-                innerRadius: '60%',
-                outerRadius: '100%',
-                shape: 'arc'
-            }
-        },
+            // Create the chart
+            $(element).highcharts({
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: name
+                },
+                xAxis: {
+                    type: 'category'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Stock'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y}'
+                        }
+                    }
+                },
 
-        tooltip: {
-            enabled: false
-        },
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> items<br/>'
+                },
 
-        // the value axis
-        yAxis: {
-            stops: [
-                [0.1, '#DF5353'], // red
-                [0.5, '#DDDF0D'], // yellow
-                [0.9, '#55BF3B'] // green
-
-            ],
-            lineWidth: 0,
-            minorTickInterval: null,
-            tickPixelInterval: 400,
-            tickWidth: 0,
-            title: {
-                y: -70
+                series: [{
+                    name: 'Stock',
+                    colorByPoint: true,
+                    data: brandsData
+                }]
             },
-            labels: {
-                y: 16
-            }
-        },
+                         // Add some life
+                         function (chart) {
+                             setInterval(function () {
+                                for (var i = 0; i < 4; i++) {
+                                     var point = chart.series[0].points[i],
+                                         newVal,
+                                         inc = Math.round((Math.random() - 0.5) * 400);
 
-        plotOptions: {
-            solidgauge: {
-                dataLabels: {
-                    y: 5,
-                    borderWidth: 0,
-                    useHTML: true
-                }
-            }
-        }
-    };
+                                     newVal = point.y + inc;
+                                     if (newVal < 0 || newVal > 200) {
+                                         newVal = point.y - inc;
+                                     }
 
-    // The speed gauge
-    $(id).highcharts(Highcharts.merge(gaugeOptions, {
-        yAxis: {
-            min: 0,
-            max: 200,
-            title: {
-                text: name
-            }
-        },
+                                     point.update(newVal);
+                                }
+                             }, 3000);
 
-        credits: {
-            enabled: false
-        },
-
-        series: [{
-            name: name,
-            data: [80],
-            dataLabels: {
-                format: '<div style="text-align:center">{y} items</div>'
-            },
-            tooltip: {
-                valueSuffix: ' items'
-            }
-        }]
-
-    }));
-
-    setInterval(function () {
-            // Speed
-            var chart = $(id).highcharts(),
-                point,
-                newVal,
-                inc;
-
-            if (chart) {
-                point = chart.series[0].points[0];
-                inc = Math.round((Math.random() - 0.5) * 100);
-                newVal = point.y + inc;
-
-                if (newVal < 0 || newVal > 200) {
-                    newVal = point.y - inc;
-                }
-
-                point.update(newVal);
-            }
-
-        }, 2000);
+                         });
 }
 
 function newGauge(id, name) {
