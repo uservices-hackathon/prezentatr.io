@@ -2,8 +2,8 @@ $(function () {
     var nextTimeout;
 
     newSlider('Order');
-    newGauge('#dojrzewatr', 'Dojrzewatr.io');
-    newGauge('#butelkatr', 'Butelkatr.io');
+    newGauge('#dojrzewatr', 'Dojrzewatr.io', 'present/dojrzewatr');
+    newGauge('#butelkatr', 'Butelkatr.io', 'present/butelkatr');
     newAggrgtrMetrics('#aggregator', 'Agregatr.io');
 
     $('#order').on('click', function () {
@@ -32,6 +32,7 @@ $(function () {
             nextTimeout = setTimeout(timeoutFct, interval);
         }
     });
+
 });
 
 function newSlider(name) {
@@ -110,7 +111,7 @@ function newAggrgtrMetrics(element, name) {
                          });
 }
 
-function newGauge(id, name) {
+function newGauge(id, name, valueUri) {
     $(id).highcharts({
 
             chart: {
@@ -152,7 +153,7 @@ function newGauge(id, name) {
 
             series: [{
                 name: 'Amount',
-                data: [80],
+                data: [0],
                 dataLabels: {
                     formatter: function () {
                         var amount = this.y;
@@ -180,18 +181,10 @@ function newGauge(id, name) {
             // Add some life
             function (chart) {
                 setInterval(function () {
-                    var point = chart.series[0].points[0],
-                        newVal,
-                        inc = Math.round((Math.random() - 0.5) * 20);
-
-                    newVal = point.y + inc;
-                    if (newVal < 0 || newVal > 200) {
-                        newVal = point.y - inc;
-                    }
-
-                    point.update(newVal);
-
-                }, 3000);
+                    $.get(valueUri, function(data) {
+                        chart.series[0].points[0].update(parseInt(data));
+                    });
+                }, 1000);
 
             });
 }

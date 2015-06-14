@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import pl.devoxx.prezentatr.feed.FeedRepository
+import pl.devoxx.prezentatr.feed.ProcessState
 
 import javax.validation.constraints.NotNull
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET
 import static pl.devoxx.prezentatr.config.Versions.PREZENTATR_JSON_VERSION_1
 import static pl.devoxx.prezentatr.config.Versions.AGREGATR_CONTENT_TYPE_V1
 import static org.springframework.web.bind.annotation.RequestMethod.POST
@@ -26,9 +29,12 @@ class PresentController {
 
     private ServiceRestClient restClient
 
+    private FeedRepository feedRepository
+
     @Autowired
-    public PresentController(ServiceRestClient restClient) {
+    public PresentController(ServiceRestClient restClient, FeedRepository feedRepository) {
         this.restClient = restClient
+        this.feedRepository = feedRepository
     }
 
     @RequestMapping(
@@ -43,5 +49,15 @@ class PresentController {
                 .andExecuteFor()
                 .anObject()
                 .ofType(String)
+    }
+
+    @RequestMapping(value = "/dojrzewatr", method = GET)
+    public String dojrzewatr() {
+        return feedRepository.countFor(ProcessState.DOJRZEWATR)
+    }
+
+    @RequestMapping(value = "/butelkatr", method = GET)
+    public String butelkatr() {
+        return feedRepository.countFor(ProcessState.BUTELKATR)
     }
 }
