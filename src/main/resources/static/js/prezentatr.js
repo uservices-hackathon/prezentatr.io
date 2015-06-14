@@ -1,11 +1,37 @@
 $(function () {
-    newSlider('Malt');
-    newSlider('Water');
-    newSlider('Hop');
-    newSlider('Yiest');
+    var nextTimeout;
+
+    newSlider('Order');
     newGauge('#dojrzewatr', 'Dojrzewatr.io');
     newGauge('#butelkatr', 'Butelkatr.io');
     newAggrgtrMetrics('#aggregator', 'Agregatr.io');
+
+    $('#order').on('click', function () {
+        var $btn = $(this).button('loading')
+        console.log("Doing business");
+        setTimeout(function() {
+            $btn.button('reset')
+        }, 200);
+      })
+
+    $('#auto').on('change', function() {
+        // always clear the last timeout if any
+        if (nextTimeout) {
+            clearTimeout(nextTimeout);
+        }
+
+        if(this.checked) {
+            console.log("setting intervals");
+            var interval = (60 / ($('#sliderLinkOrder').text())) * 1000;
+            console.log("interval = " + interval);
+            var timeoutFct = function() {
+                var $order = $('#order').click();
+                nextTimeout = setTimeout(timeoutFct, interval);
+            };
+
+            nextTimeout = setTimeout(timeoutFct, interval);
+        }
+    });
 });
 
 function newSlider(name) {
@@ -14,8 +40,8 @@ function newSlider(name) {
 				linkTo: 'sliderLink' + name,
 				step: 1,
 				min: 10,
-				max: 100,
-				value: 15
+				max: 120,
+				value: 60
 			});
 }
 

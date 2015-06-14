@@ -1,0 +1,20 @@
+{
+    "request": {
+        "method": "GET",
+        "headers": {
+            "Content-Type": {
+                "equalTo": "application/vnd.pl.devoxx.aggregatr.v1+json"
+            }
+        },
+        "url": "/ingredients",
+        "bodyPatterns": [
+            {
+                "equalTo": "{\"items\":[\"YIEST\"]}"
+            }
+        ]
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"ingredients\":[{\"type\":\"YIEST\",\"quantity\":200}]}"
+    }
+}
