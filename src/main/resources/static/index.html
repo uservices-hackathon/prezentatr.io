@@ -25,8 +25,12 @@
 <body>
 
 <div class="container">
-    <div>
+    <input>
         <h1>Brewing Control Panel</h1>
+        <input type="hidden" id="WATER"/>
+        <input type="hidden" id="MALT"/>
+        <input type="hidden" id="HOP"/>
+        <input type="hidden" id="YIEST"/>
 
         <div class="row">
             <div id="aggregator" class="col-md-4"></div>
@@ -54,14 +58,14 @@
                         <div class="col-md-6">
                             <div class="checkbox">
                                 <label style="font-size: large">
-                                    <input type="checkbox"> Malt
+                                    <input id="chkMalt" type="checkbox" checked> Malt
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="checkbox">
                                 <label style="font-size: large">
-                                    <input type="checkbox"> Water
+                                    <input id="chkWater" type="checkbox" checked> Water
                                 </label>
                             </div>
                         </div>
@@ -70,14 +74,14 @@
                         <div class="col-md-6">
                             <div class="checkbox">
                                 <label style="font-size: large">
-                                    <input type="checkbox"> Hop
+                                    <input id="chkHop" type="checkbox" checked> Hop
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="checkbox">
                                 <label style="font-size: large">
-                                    <input type="checkbox"> Yiest
+                                    <input id="chkYiest" type="checkbox" checked> Yiest
                                 </label>
                             </div>
                         </div>

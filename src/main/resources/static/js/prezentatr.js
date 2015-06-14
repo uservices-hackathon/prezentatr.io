@@ -8,7 +8,24 @@ $(function () {
 
     $('#order').on('click', function () {
         var $btn = $(this).button('loading')
-        console.log("Doing business");
+
+        $.ajax({
+          url:'present/order',
+          type:"POST",
+          data:JSON.stringify(buildOrderRequest()),
+          contentType:"application/json; charset=utf-8",
+          dataType:"json",
+          success: function(data){
+          console.log(data);
+            var ing = data.ingredients;
+            for (var i = 0; i < ing.length; i++) {
+                var $input = $('#'+ing[i].type);
+                $input.val(ing[i].quantity);
+                $input.change();
+            }
+          }
+        })
+
         setTimeout(function() {
             $btn.button('reset')
         }, 200);
@@ -35,6 +52,27 @@ $(function () {
 
 });
 
+function buildOrderRequest() {
+    var req = {};
+    req.items = new Array();
+
+    var items = new Array();
+    if ($("#chkWater").is(':checked')) {
+        req.items.push('WATER');
+    }
+    if ($("#chkHop").is(':checked')) {
+        req.items.push('HOP');
+    }
+    if ($("#chkYiest").is(':checked')) {
+        req.items.push('YIEST');
+    }
+    if ($("#chkMalt").is(':checked')) {
+        req.items.push('MALT');
+    }
+    console.log(JSON.stringify(req));
+    return req;
+}
+
 function newSlider(name) {
     new dhtmlXSlider({
 				parent: 'sliderObj' + name,
@@ -48,7 +86,7 @@ function newSlider(name) {
 
 function newAggrgtrMetrics(element, name) {
 
-            var brandsData = [["Malt", 30], ["Water", 600], ["Hop", 120], ["Yiest", 5]];
+            var brandsData = [["Malt", 0], ["Water", 0], ["Hop", 0], ["Yiest", 0]];
 
 
             // Create the chart
@@ -91,24 +129,20 @@ function newAggrgtrMetrics(element, name) {
                     data: brandsData
                 }]
             },
-                         // Add some life
-                         function (chart) {
-                             setInterval(function () {
-                                for (var i = 0; i < 4; i++) {
-                                     var point = chart.series[0].points[i],
-                                         newVal,
-                                         inc = Math.round((Math.random() - 0.5) * 400);
-
-                                     newVal = point.y + inc;
-                                     if (newVal < 0 || newVal > 200) {
-                                         newVal = point.y - inc;
-                                     }
-
-                                     point.update(newVal);
-                                }
-                             }, 3000);
-
-                         });
+            function (chart) {
+                $('#MALT').change(function(input){
+                    chart.series[0].points[0].update(parseInt(input.target.value));
+                });
+                $('#WATER').change(function(input){
+                    chart.series[0].points[1].update(parseInt(input.target.value));
+                });
+                $('#HOP').change(function(input){
+                    chart.series[0].points[2].update(parseInt(input.target.value));
+                });
+                $('#YIEST').change(function(input){
+                    chart.series[0].points[3].update(parseInt(input.target.value));
+                });
+            });
 }
 
 function newGauge(id, name, valueUri) {
