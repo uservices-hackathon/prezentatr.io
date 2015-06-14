@@ -49,6 +49,17 @@ class FeedController {
     }
 
     @RequestMapping(
+            value = "/bottles/{bottles}",
+            produces = PREZENTATR_JSON_VERSION_1,
+            consumes = PREZENTATR_JSON_VERSION_1,
+            method = PUT)
+    @ApiOperation(value = "sets number of bottles")
+    public String bottles(@PathVariable Integer bottles) {
+        log.info("bottles number: ${bottles}")
+        feedRepository.setBottles(bottles)
+    }
+
+    @RequestMapping(
             method = GET
     )
     public String show() {

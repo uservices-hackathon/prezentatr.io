@@ -60,4 +60,9 @@ class PresentController {
     public String butelkatr() {
         return feedRepository.countFor(ProcessState.BUTELKATR)
     }
+
+    @RequestMapping(value = "/bottles", method = GET)
+    public String bottles() {
+        return feedRepository.getBottles()
+    }
 }

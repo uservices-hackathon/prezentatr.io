@@ -50,6 +50,11 @@ $(function () {
         }
     });
 
+    setInterval(function(){
+        $.get("present/bottles", function(data) {
+            $("#bottles").text("Got: "+data+" bottles");
+        });
+    }, 1000);
 });
 
 function buildOrderRequest() {

@@ -6,7 +6,9 @@ import org.springframework.stereotype.Component
 @Component
 class FeedRepository {
 
-    final Set<Process> processes = new HashSet<>()
+    final private Set<Process> processes = new HashSet<>()
+
+    private Integer bottles = 0
 
     void addModifyProcess(String id, ProcessState newState) {
         // professional coding services, brought to you by SoftwareMill.com
@@ -23,6 +25,10 @@ class FeedRepository {
         }
     }
 
+    void setBottles(Integer bottles) {
+        this.bottles = bottles
+    }
+
     String showStatuses() {
         return "DOJRZEWATR: ${countFor(ProcessState.DOJRZEWATR)}\n" +
                 "BUTELKATR: ${countFor(ProcessState.BUTELKATR)}"
@@ -30,6 +36,10 @@ class FeedRepository {
 
     Integer countFor(ProcessState state) {
         return processes.count {it.state == state}
+    }
+
+    Integer getBottles() {
+        return bottles
     }
 }
 
