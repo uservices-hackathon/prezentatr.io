@@ -8,9 +8,11 @@ city.finding.service.url: "http://localhost:#{@httpMockServer.port()}"
 
 graphite.host: localhost
 
-stubrunner.stubs:
-  repository.root: "http://dl.bintray.com/4finance/micro"
-  group: com.ofg
-  module: stub-runner-examples
+stubrunner:
+  skip-local-repo: false
+  work-offline: true
+  use-microservice-definitions: true
+  stubs:
+    repository.root: "/Users/szimano/.m2/repository"
 
 acceptance-tests.timeout: 8

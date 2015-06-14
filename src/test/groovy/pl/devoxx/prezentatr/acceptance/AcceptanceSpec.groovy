@@ -20,7 +20,7 @@ class AcceptanceSpec extends MicroserviceMvcWiremockSpec {
     }
 
     private MvcResult order_ingredients() {
-        return mockMvc.perform(post(create('/present/order')).content("""{"items": ["WATER"] }""")).andDo(print()).andReturn()
+        return mockMvc.perform(post(create('/present/order')).content("""{"items":["WATER"]}""")).andDo(print()).andReturn()
     }
 
     private void aggregated_ingredients_are_present(MvcResult result) {
@@ -29,10 +29,7 @@ class AcceptanceSpec extends MicroserviceMvcWiremockSpec {
         Map expectedResult = new JsonSlurper().parseText('''
                 {
                     "ingredients": [
-                            {"type":"MALT","quantity":200},
-                            {"type":"WATER","quantity":1000},
-                            {"type":"HOP","quantity":50},
-                            {"type":"YIEST","quantity":100}
+                            {"type":"WATER","quantity":200}
                         ]
                 }
             ''')

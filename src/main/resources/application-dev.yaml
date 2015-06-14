@@ -1,0 +1,6 @@
+stubrunner:
+  skip-local-repo: false
+  work-offline: true
+  use-microservice-definitions: true
+  stubs:
+    repository.root: "/Users/szimano/.m2/repository"

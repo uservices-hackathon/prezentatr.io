@@ -122,7 +122,6 @@ dependencies {
     }
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "com.ofg:micro-infra-spring-test:$microInfraSpringVersion"
-//    testCompile "com.ofg:micro-deps-spring-test-config:$microInfraSpringVersion"
 
     testCompile "org.gebish:geb-core:$gebVersion"
     testCompile "org.gebish:geb-spock:$gebVersion"
