@@ -25,8 +25,10 @@ class FeedRepository {
         }
     }
 
-    void setBottles(Integer bottles) {
+    void setBottles(String id, Integer bottles) {
         this.bottles = bottles
+
+        addModifyProcess(id, ProcessState.DONE)
     }
 
     String showStatuses() {
@@ -51,5 +53,6 @@ class Process {
 
 enum ProcessState {
     DOJRZEWATR,
-    BUTELKATR
+    BUTELKATR,
+    DONE
 }
