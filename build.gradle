@@ -26,20 +26,16 @@ apply plugin: 'accurest'
 apply plugin: 'com.blogspot.toomuchcoding.testprofiler'
 
 ext {
-    versionPrefix = "CD"
-    buildNrLoc = project.hasProperty('buildNr') ? "${buildNr}" : "000"
-    currentVersion = "${versionPrefix}-${buildNrLoc}"
-    projectGroupId = 'pl.devoxx'
+    buildNrLoc = project.hasProperty('buildNr') ? "${buildNr}" : "CD-000"
+    projectGroupId = groupId
 
-    contractsDir = file("${project.rootDir}/repository/mappings/pl/devoxx/prezentatr/feed")
+    contractsDir = file("${project.rootDir}/repository/mappings/")
     wiremockStubsOutputDirRoot = file("${project.buildDir}/production/${project.name}-stubs/")
     wiremockStubsOutputDir = new File(wiremockStubsOutputDirRoot, 'mappings/')
-
-    //microInfraSpring and versions of other dependencies were moved to gradle.properties
 }
 
 group = projectGroupId
-version = currentVersion
+version = buildNrLoc
 
 sourceSets.main.java.srcDirs = []
 sourceSets.main.groovy.srcDirs += ["src/main/java"]
@@ -139,7 +135,7 @@ task docker(type: Docker) {
     dryRun true
     setEnvironment('CONFIG_FOLDER', '/properties')
     addFile("properties", "/properties")
-    addFile("${libsDir}/${project.name}-${currentVersion}.jar", "/${project.name}/${project.name}.jar")
+    addFile("${libsDir}/${project.name}-${buildNrLoc}.jar", "/${project.name}/${project.name}.jar")
     exposePort(8095)
     entryPoint(['java', '-jar', "/${project.name}/${project.name}.jar"])
 }
@@ -242,10 +238,10 @@ artifacts {
 publishing {
     repositories {
         maven {
-            url getProperty('mavenRepoUrl')
+            url getProp('mavenRepoUrl')
             credentials {
-                username getProperty('mavenUser')
-                password getProperty('mavenPassword')
+                username getProp('mavenUser')
+                password getProp('mavenPassword')
             }
         }
     }
@@ -264,12 +260,8 @@ publishing {
     }
 }
 
-task uploadArchives(dependsOn: 'publish') {
-    group "publishing"
-    description "DEPRECATED - Publishes produced archives - DEPRECATED - use 'publish' task"
-    doFirst {
-        logger.warn("DEPRECATION WARNING. Task 'uploadArchives' is deprecated. Use 'publish' task instead.")
-    }
+String getProp(String propName) {
+    return getProperty(propName) ?: System.properties[propName]
 }
 
 wrapper {
