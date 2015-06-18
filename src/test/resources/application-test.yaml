@@ -13,6 +13,6 @@ stubrunner:
   work-offline: true
   use-microservice-definitions: true
   stubs:
-    repository.root: "/Users/szimano/.m2/repository"
+    repository.root: "http://54.171.73.213:8081/nexus/content/repositories/releases/"
 
 acceptance-tests.timeout: 8
