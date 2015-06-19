@@ -8,24 +8,7 @@ $(function () {
 
     $('#order').on('click', function () {
         var $btn = $(this).button('loading')
-
-        $.ajax({
-          url:'present/order',
-          type:"POST",
-          data:JSON.stringify(buildOrderRequest()),
-          contentType:"application/json; charset=utf-8",
-          dataType:"json",
-          success: function(data){
-          console.log(data);
-            var ing = data.ingredients;
-            for (var i = 0; i < ing.length; i++) {
-                var $input = $('#'+ing[i].type);
-                $input.val(ing[i].quantity);
-                $input.change();
-            }
-          }
-        })
-
+        order();
         setTimeout(function() {
             $btn.button('reset')
         }, 200);
@@ -38,15 +21,12 @@ $(function () {
         }
 
         if(this.checked) {
-            console.log("setting intervals");
-            var interval = (60 / ($('#sliderLinkOrder').text())) * 1000;
-            console.log("interval = " + interval);
             var timeoutFct = function() {
-                var $order = $('#order').click();
-                nextTimeout = setTimeout(timeoutFct, interval);
+                nextTimeout = setTimeout(timeoutFct, getAutoInterval());
+                $('#order').click();
             };
 
-            nextTimeout = setTimeout(timeoutFct, interval);
+            nextTimeout = setTimeout(timeoutFct, getAutoInterval());
         }
     });
 
@@ -56,6 +36,28 @@ $(function () {
         });
     }, 1000);
 });
+
+function getAutoInterval() {
+    return (60 / ($('#sliderLinkOrder').text())) * 1000;
+}
+
+function order() {
+    $.ajax({
+          url:'present/order',
+          type:"POST",
+          data:JSON.stringify(buildOrderRequest()),
+          contentType:"application/json; charset=utf-8",
+          dataType:"json",
+          success: function(data){
+            var ing = data.ingredients;
+            for (var i = 0; i < ing.length; i++) {
+                var $input = $('#'+ing[i].type);
+                $input.val(ing[i].quantity);
+                $input.change();
+            }
+          }
+    });
+}
 
 function buildOrderRequest() {
     var req = {};
@@ -74,7 +76,6 @@ function buildOrderRequest() {
     if ($("#chkMalt").is(':checked')) {
         req.items.push('MALT');
     }
-    console.log(JSON.stringify(req));
     return req;
 }
 
@@ -84,7 +85,7 @@ function newSlider(name) {
 				linkTo: 'sliderLink' + name,
 				step: 1,
 				min: 10,
-				max: 120,
+				max: 720,
 				value: 60
 			});
 }
