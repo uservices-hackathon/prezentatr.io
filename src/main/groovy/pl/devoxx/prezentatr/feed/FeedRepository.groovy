@@ -6,22 +6,16 @@ import org.springframework.stereotype.Component
 @Component
 class FeedRepository {
 
-    final private Set<Process> processes = new HashSet<>()
+    final private Set<Process> processes = Collections.synchronizedSet(new HashSet<>())
 
     private Integer bottles = 0
 
     void addModifyProcess(String id, ProcessState newState) {
-        // professional coding services, brought to you by SoftwareMill.com
-        //  we do not often synchronize over fields, but when we do
-        //  we do it with class
-        synchronized (processes) {
-            Process p;
-            if ((p = processes.find {it.id == id})) {
-                p.state = newState
-            }
-            else {
-                processes.add(new Process(id, newState))
-            }
+        Process p;
+        if ((p = processes.find { it.id == id })) {
+            p.state = newState
+        } else {
+            processes.add(new Process(id, newState))
         }
     }
 
@@ -37,7 +31,7 @@ class FeedRepository {
     }
 
     Integer countFor(ProcessState state) {
-        return processes.count {it.state == state}
+        return processes.count { it.state == state }
     }
 
     Integer getBottles() {
