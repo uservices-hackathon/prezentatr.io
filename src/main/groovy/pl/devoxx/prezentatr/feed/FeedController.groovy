@@ -1,4 +1,6 @@
 package pl.devoxx.prezentatr.feed
+
+import com.ofg.infrastructure.correlationid.CorrelationIdHolder
 import com.wordnik.swagger.annotations.Api
 import com.wordnik.swagger.annotations.ApiOperation
 import groovy.transform.TypeChecked
@@ -27,36 +29,36 @@ class FeedController {
     }
 
     @RequestMapping(
-            value = "/dojrzewatr/{id}",
+            value = "/dojrzewatr",
             produces = PREZENTATR_JSON_VERSION_1,
             consumes = PREZENTATR_JSON_VERSION_1,
             method = PUT)
     @ApiOperation(value = "sends an order to dojrzewatr")
-    public String dojrzewatr(@PathVariable String id) {
-        log.info("new dojrzewatr id: ${id}")
-        feedRepository.addModifyProcess(id, ProcessState.DOJRZEWATR)
+    public String dojrzewatr() {
+        log.info("new dojrzewatr")
+        feedRepository.addModifyProcess(CorrelationIdHolder.get(), ProcessState.DOJRZEWATR)
     }
 
     @RequestMapping(
-            value = "/butelkatr/{id}",
+            value = "/butelkatr",
             produces = PREZENTATR_JSON_VERSION_1,
             consumes = PREZENTATR_JSON_VERSION_1,
             method = PUT)
     @ApiOperation(value = "sends an order to butelkatr")
-    public String butelkatr(@PathVariable String id) {
-        log.info("new butelkatr id: ${id}")
-        feedRepository.addModifyProcess(id, ProcessState.BUTELKATR)
+    public String butelkatr() {
+        log.info("new butelkatr")
+        feedRepository.addModifyProcess(CorrelationIdHolder.get(), ProcessState.BUTELKATR)
     }
 
     @RequestMapping(
-            value = "/bottles/{id}/{bottles}",
+            value = "/bottles/{bottles}",
             produces = PREZENTATR_JSON_VERSION_1,
             consumes = PREZENTATR_JSON_VERSION_1,
             method = PUT)
     @ApiOperation(value = "sets number of bottles")
-    public String bottles(@PathVariable String id, @PathVariable Integer bottles) {
+    public String bottles(@PathVariable Integer bottles) {
         log.info("bottles number: ${bottles}")
-        feedRepository.setBottles(id, bottles)
+        feedRepository.setBottles(CorrelationIdHolder.get(), bottles)
     }
 
     @RequestMapping(
