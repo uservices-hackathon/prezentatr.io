@@ -42,7 +42,7 @@ class PresentController {
             method = POST)
     @ApiOperation(value = "sends an order to agregatr")
     public String order(HttpEntity<String> body) {
-        log.info(body.body)
+        log.info("Making new order with $body.body")
         restClient.forService(Collaborators.AGGREGATR_DEPENDENCY_NAME).post().onUrl("/ingredients")
                 .body(body.body)
                     .withHeaders().contentType(AGREGATR_CONTENT_TYPE_V1)
