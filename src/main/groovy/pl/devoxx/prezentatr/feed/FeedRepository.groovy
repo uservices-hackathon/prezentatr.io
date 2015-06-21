@@ -1,9 +1,11 @@
 package pl.devoxx.prezentatr.feed
 
 import groovy.transform.Canonical
+import org.springframework.cloud.context.config.annotation.RefreshScope
 import org.springframework.stereotype.Component
 
 @Component
+@RefreshScope
 class FeedRepository {
 
     final private Set<Process> processes = Collections.synchronizedSet(new HashSet<>())
