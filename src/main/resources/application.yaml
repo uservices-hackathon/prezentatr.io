@@ -1,3 +1,4 @@
+spring.application.name: prezentatr
 metrics.path.app: prezentatr
 stubrunner:
   use-microservice-definitions: true
