@@ -109,6 +109,8 @@ dependencies {
     compile 'org.codehaus.gpars:gpars:1.2.1'
     compile 'net.sf.ehcache:ehcache:2.10.0'
     compile "com.ofg:micro-infra-spring-boot-starter:$microInfraSpringVersion"
+    compile "de.codecentric:spring-boot-admin-starter-client:1.2.3"
+    compile 'org.jolokia:jolokia-core'
 
     runtime 'cglib:cglib-nodep:3.1'
     runtime 'org.objenesis:objenesis:2.1'
