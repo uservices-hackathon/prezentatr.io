@@ -1,18 +1,1 @@
-db:
-  url: "jdbc:postgresql://localhost/db_name?ApplicationName=microservice_name"
-  user: user
-  password: password
-  driver: org.postgresql.Driver
-
-city.finding.service.url: "http://localhost:#{@httpMockServer.port()}"
-
-graphite.host: localhost
-
-stubrunner:
-  skip-local-repo: false
-  work-offline: true
-  use-microservice-definitions: true
-  stubs:
-    repository.root: "http://54.171.73.213:8081/nexus/content/repositories/releases/"
-
 acceptance-tests.timeout: 8

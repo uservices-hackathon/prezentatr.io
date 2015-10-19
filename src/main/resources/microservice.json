@@ -1,9 +1,9 @@
 {
     "pl": {
-        "this": "pl/devoxx/prezentatr",
+        "this": "pl/wjug/prezentatr",
         "dependencies": {
             "aggregatr": {
-                "path": "pl/devoxx/aggregatr"
+                "path": "pl/wjug/aggregatr"
             }
         }
     }

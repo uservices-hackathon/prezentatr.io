@@ -10,6 +10,7 @@ buildscript {
         classpath 'se.transmode.gradle:gradle-docker:1.2'
         classpath "io.codearte.accurest:accurest-gradle-plugin:$accurestVersion"
         classpath 'com.blogspot.toomuchcoding:gradle-test-profiler:0.3.1'
+        classpath 'org.ajoberstar:gradle-git:0.12.0'
 
         if (project.hasProperty("coverage")) {
             classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:1.0.2'
@@ -51,6 +52,9 @@ configurations {
                 if (details.requested.group == 'org.codehaus.groovy' && details.requested.name != "groovy-all") {
                     details.useTarget("org.codehaus.groovy:groovy-all:${details.requested.version}")
                 }
+                if (details.requested.name == 'servlet-api') {
+                    details.useTarget("org.apache.tomcat.embed:tomcat-embed-core:8.0.23")
+                }
             }
         }
     }
@@ -87,13 +91,27 @@ repositories {
     jcenter()
 }
 
+configurations {
+    all {
+        resolutionStrategy {
+            eachDependency { DependencyResolveDetails details ->
+                if (details.requested.group == 'org.springframework.boot') {
+                    details.useVersion '1.2.5.RELEASE'
+                }
+                if (details.requested.group == 'org.springframework') {
+                    details.useVersion '4.2.1.RELEASE'
+                }
+            }
+        }
+    }
+}
+
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework:spring-context-support"
-    compile "org.codehaus.groovy:groovy-all"
     compile 'com.fasterxml.jackson.core:jackson-databind'
+    compile "org.springframework.cloud:spring-cloud-starter-zipkin:1.0.0.M1"
     compile "org.codehaus.jackson:jackson-mapper-asl:$jacksonMapper"
     compile "org.codehaus.jackson:jackson-core-asl:$jacksonMapper"
     compile 'com.google.guava:guava:18.0'
@@ -106,6 +124,8 @@ dependencies {
     compile 'org.codehaus.gpars:gpars:1.2.1'
     compile 'net.sf.ehcache:ehcache:2.10.0'
     compile "com.ofg:micro-infra-spring-boot-starter:$microInfraSpringVersion"
+    compile "de.codecentric:spring-boot-admin-starter-client:1.2.3"
+    compile 'org.jolokia:jolokia-core'
 
     runtime 'cglib:cglib-nodep:3.1'
     runtime 'org.objenesis:objenesis:2.1'
@@ -206,26 +226,10 @@ accurest {
 
 test.dependsOn { generateAccurest } //See: https://github.com/Codearte/accurest/issues/36
 
-task addHashFile << {
-    String gitCmd = "git log --pretty=format:'%H' -n 1"
-    def proc = gitCmd.execute()
-    proc.waitFor()
-    new File("commitHash.txt").withWriter { it << proc.in.text }
-}
-
-jar {
-    dependsOn addHashFile
-    from "commitHash.txt"
-}
-
 task stubsJar(type: Jar, dependsOn: ["generateWiremockClientStubs", "addHashFile"]) {
     baseName = "${project.name}-stubs"
     from wiremockStubsOutputDirRoot
     from "commitHash.txt"
-}
-
-bootRepackage {
-    withJarTask = "jar"
 }
 
 //Make sure that fat jar is built before uploading
@@ -266,4 +270,29 @@ String getProp(String propName) {
 
 wrapper {
     gradleVersion '2.2.1'
+}
+
+task addHashFile << {
+    ext.repo = org.ajoberstar.grgit.Grgit.open(project.file('.'))
+    def headCommit = repo.head()
+    ext.gitBranch = repo.branch.current.name
+    ext.gitCommitId = headCommit.abbreviatedId
+    ext.gitCommitTime = new Date(headCommit.time * 1000L).format("yyyy-MM-dd'T'HH:mm:ssZ")
+
+    File resourcesMainDir = new File(project.buildDir, 'resources/main')
+    resourcesMainDir.mkdirs()
+    File gitPropertiesFile = new File(resourcesMainDir, 'git.properties')
+    gitPropertiesFile.text = """git.branch=${gitBranch}
+git.commit.id=${gitCommitId}
+git.commit.time=${gitCommitTime}
+"""
+}
+
+jar {
+    dependsOn addHashFile
+    from "git.properties"
+}
+
+bootRepackage {
+    withJarTask = "jar"
 }

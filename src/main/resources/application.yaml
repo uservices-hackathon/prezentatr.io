@@ -1,1 +1,6 @@
+spring.application.name: prezentatr
 metrics.path.app: prezentatr
+stubrunner:
+  use-microservice-definitions: true
+  stubs:
+    repository.root: "http://nexus.wjug:8081/nexus/content/repositories/releases/"
