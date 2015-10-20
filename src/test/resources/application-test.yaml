@@ -1,1 +1,2 @@
 acceptance-tests.timeout: 8
+spring.sleuth.zipkin.enabled: false
