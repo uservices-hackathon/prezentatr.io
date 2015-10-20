@@ -217,7 +217,7 @@ if (project.hasProperty("coverage")) {
 }
 
 accurest {
-    baseClassForTests = 'pl.devoxx.prezentatr.present.BaseMvcSpec'
+    baseClassForTests = 'pl.uservices.prezentatr.present.BaseMvcSpec'
     basePackageForTests = 'accurest'
     contractsDslDir = contractsDir
     generatedTestSourcesDir = file("${project.buildDir}/generated-sources/accurest")
@@ -226,7 +226,7 @@ accurest {
 
 test.dependsOn { generateAccurest } //See: https://github.com/Codearte/accurest/issues/36
 
-task stubsJar(type: Jar, dependsOn: ["generateWiremockClientStubs", "addHashFile"]) {
+task stubsJar(type: Jar, dependsOn: ["generateWireMockClientStubs", "addHashFile"]) {
     baseName = "${project.name}-stubs"
     from wiremockStubsOutputDirRoot
     from "commitHash.txt"

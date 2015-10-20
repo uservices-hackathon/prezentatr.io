@@ -1,9 +1,9 @@
 {
     "pl": {
-        "this": "pl/wjug/prezentatr",
+        "this": "pl/uservices/prezentatr",
         "dependencies": {
             "aggregatr": {
-                "path": "pl/wjug/aggregatr"
+                "path": "pl/uservices/aggregatr"
             }
         }
     }
