@@ -25,6 +25,7 @@ public class PresentationService {
 
     private AtomicInteger dojrzewatrCount = new AtomicInteger(0);
     private AtomicInteger bottlesCount = new AtomicInteger(0);
+    private int bottlesQueueCount;
 
     private final ServiceRestClient serviceRestClient;
 
@@ -90,13 +91,18 @@ public class PresentationService {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/present/butelkatr")
-    public Integer presentBottles() {
-        return bottlesCount.get();
+    public Integer presentButelkatr() {
+        return bottlesQueueCount;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/present/dojrzewatr")
     public Integer presentDojrzewatr() {
         return dojrzewatrCount.get();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/present/bottles")
+    public Integer presentBottles() {
+        return bottlesCount.get();
     }
 
 
@@ -106,11 +112,18 @@ public class PresentationService {
         bottlesCount.addAndGet(bottlePackage.getQuantity());
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/bottleQueue", consumes = {"application/prezentator.v1+json"})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void provideBottlesQueue(final @RequestBody BottlePackage bottlePackage) {
+        bottlesQueueCount = bottlePackage.getQuantity();
+    }
+
     @RequestMapping(method = RequestMethod.PUT, value = "/wort", consumes = {"application/prezentator.v1+json"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void provideWort(final @RequestBody WortPackage wortPackage) {
         dojrzewatrCount.addAndGet(wortPackage.getWarehouseState());
     }
+
 
     public class Ingredient {
 
