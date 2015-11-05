@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.EnableAsync
 @TypeChecked
 @SpringBootApplication
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@EnableCaching
 @EnableAsync
 class Application {
 
