@@ -1,10 +1,7 @@
 package pl.uservices.prezentatr.rest;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-
+import com.ofg.infrastructure.discovery.ServiceAlias;
+import com.ofg.infrastructure.web.resttemplate.fluent.ServiceRestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import pl.uservices.prezentatr.dto.BottlePackage;
 import pl.uservices.prezentatr.dto.WortPackage;
 
-import com.google.common.collect.Lists;
-import com.ofg.infrastructure.discovery.ServiceAlias;
-import com.ofg.infrastructure.web.resttemplate.fluent.ServiceRestClient;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 public class PresentationService {
@@ -35,16 +32,23 @@ public class PresentationService {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/present/order")
-    public IngredientsDto order() {
-        final IngredientsAggregator request = new IngredientsAggregator();
-        request.ingredients = Lists.newArrayList();
-        request.ingredients.add(IngredientType.MALT);
-        request.ingredients.add(IngredientType.WATER);
-        request.ingredients.add(IngredientType.HOP);
-        request.ingredients.add(IngredientType.YEAST);
+    public IngredientsDto order(@RequestBody Items items) {
+        final IngredientsAggregator request = getIngredientsAggregator(items);
         final Ingredients aggregatr = serviceRestClient.forService(new ServiceAlias("aggregatr")).post().onUrl("/order")
                 .body(request).withHeaders().contentTypeJson().andExecuteFor().anObject().ofType(Ingredients.class);
         return new IngredientsDto(aggregatr);
+    }
+
+    private IngredientsAggregator getIngredientsAggregator(final Items items) {
+        final IngredientsAggregator request = new IngredientsAggregator();
+
+        if(items.items != null)
+        {
+            for (String item : items.items) {
+                request.ingredients.add(IngredientType.valueOf(item));
+            }
+        }
+        return request;
     }
 
 
@@ -84,6 +88,8 @@ public class PresentationService {
         }
     }
 
+
+
     public static class IngredientsAggregator {
 
         public Collection<IngredientType> ingredients;
@@ -110,6 +116,19 @@ public class PresentationService {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void provideWort(final @RequestBody WortPackage wortPackage) {
         dojrzewatrCount.addAndGet(wortPackage.getWarehouseState());
+    }
+
+    public class Items {
+
+        private Collection<String> items;
+
+        public Collection<String> getItems() {
+            return items;
+        }
+
+        public void setItems(final Collection<String> items) {
+            this.items = items;
+        }
     }
 
     public class Ingredient {
