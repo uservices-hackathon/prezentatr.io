@@ -38,7 +38,7 @@ public class PresentationService
 	}
 
     @RequestMapping(method = RequestMethod.POST, value = "/present/order")
-    public IngredientsDto order(@RequestBody Items items) {
+    public IngredientsDto order(final @RequestBody Items items) {
         final IngredientsAggregator request = getIngredientsAggregator(items);
         final Ingredients aggregatr = serviceRestClient.forService(new ServiceAlias("aggregatr")).post().onUrl("/order")
                 .body(request).withHeaders().contentTypeJson().andExecuteFor().anObject().ofType(Ingredients.class);
@@ -48,10 +48,10 @@ public class PresentationService
     private IngredientsAggregator getIngredientsAggregator(final Items items) {
         final IngredientsAggregator request = new IngredientsAggregator();
 
-        if(items.items != null)
+        if(items != null && items.items != null)
         {
             for (final String item : items.items) {
-                request.ingredients.add(IngredientType.valueOf(item));
+                request.ingredients.add(transformYeast(item));
             }
         }
         return request;
@@ -73,7 +73,7 @@ public class PresentationService
 		}
 	}
 
-    public class Items {
+    public static class Items {
 
         private Collection<String> items;
 
@@ -100,22 +100,26 @@ public class PresentationService
             }
         }
 
-        private IngredientType transformYeast(final String code) {
-            IngredientType key = IngredientType.valueOf(code);
 
-            switch (key) {
-                case YEAST:
-                    return IngredientType.YIEST;
-                default:
-                    return key;
-            }
+    }
+
+    private IngredientType transformYeast(final String code) {
+        IngredientType key = IngredientType.valueOf(code);
+
+        switch (key) {
+            case YIEST:
+                return IngredientType.YEAST;
+            case YEAST:
+                return IngredientType.YIEST;
+            default:
+                return key;
         }
     }
 
 	public static class IngredientsAggregator
 	{
 
-		public Collection<IngredientType> ingredients;
+		public Collection<IngredientType> ingredients = new ArrayList<>();
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/present/butelkatr")
