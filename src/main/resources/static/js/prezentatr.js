@@ -70,8 +70,8 @@ function buildOrderRequest() {
     if ($("#chkHop").is(':checked')) {
         req.items.push('HOP');
     }
-    if ($("#chkYiest").is(':checked')) {
-        req.items.push('YIEST');
+    if ($("#chkYeast").is(':checked')) {
+        req.items.push('YEAST');
     }
     if ($("#chkMalt").is(':checked')) {
         req.items.push('MALT');
@@ -92,7 +92,7 @@ function newSlider(name) {
 
 function newAggrgtrMetrics(element, name) {
 
-            var brandsData = [["Malt", 0], ["Water", 0], ["Hop", 0], ["Yiest", 0]];
+            var brandsData = [["Malt", 0], ["Water", 0], ["Hop", 0], ["Yeast", 0]];
 
 
             // Create the chart
@@ -145,7 +145,7 @@ function newAggrgtrMetrics(element, name) {
                 $('#HOP').change(function(input){
                     chart.series[0].points[2].update(parseInt(input.target.value));
                 });
-                $('#YIEST').change(function(input){
+                $('#YEAST').change(function(input){
                     chart.series[0].points[3].update(parseInt(input.target.value));
                 });
             });
