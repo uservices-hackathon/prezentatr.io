@@ -1,8 +1,5 @@
 package pl.uservices.prezentatr.present
 
-import com.ofg.infrastructure.web.resttemplate.fluent.ServiceRestClient
-import com.wordnik.swagger.annotations.Api
-import com.wordnik.swagger.annotations.ApiOperation
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,18 +21,14 @@ import static pl.uservices.prezentatr.config.Versions.AGREGATR_CONTENT_TYPE_V1
 @RestController
 @RequestMapping('/present')
 @TypeChecked
-@Api(value = "present", description = "API for GUI")
 class PresentController {
-
-    private ServiceRestClient restClient
 
     private FeedRepository feedRepository
 
     private Trace trace
 
     @Autowired
-    public PresentController(ServiceRestClient restClient, FeedRepository feedRepository, Trace trace) {
-        this.restClient = restClient
+    public PresentController(FeedRepository feedRepository, Trace trace) {
         this.feedRepository = feedRepository
         this.trace = trace
     }
@@ -43,19 +36,18 @@ class PresentController {
     @RequestMapping(
             value = "/order",
             method = POST)
-    @ApiOperation(value = "sends an order to agregatr")
     public String order(HttpEntity<String> body) {
         log.info("Making new order with $body.body")
         TraceScope scope = this.trace.startSpan("calling_aggregatr",
                 new AlwaysSampler(), null);
-        String result = restClient.forService(Collaborators.AGGREGATR_DEPENDENCY_NAME).post().onUrl("/ingredients")
+        /*String result = restClient.forService(Collaborators.AGGREGATR_DEPENDENCY_NAME).post().onUrl("/ingredients")
                 .body(body.body)
                     .withHeaders().contentType(AGREGATR_CONTENT_TYPE_V1)
                 .andExecuteFor()
                 .anObject()
                 .ofType(String)
-        scope.close()
-        return result
+        */scope.close()
+        return ''//result
     }
 
     @RequestMapping(value = "/dojrzewatr", method = GET)
