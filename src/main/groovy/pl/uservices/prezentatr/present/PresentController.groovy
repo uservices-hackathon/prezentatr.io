@@ -1,5 +1,4 @@
 package pl.uservices.prezentatr.present
-
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,13 +8,11 @@ import org.springframework.cloud.sleuth.sampler.AlwaysSampler
 import org.springframework.http.HttpEntity
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import pl.uservices.prezentatr.config.Collaborators
 import pl.uservices.prezentatr.feed.FeedRepository
 import pl.uservices.prezentatr.feed.ProcessState
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET
 import static org.springframework.web.bind.annotation.RequestMethod.POST
-import static pl.uservices.prezentatr.config.Versions.AGREGATR_CONTENT_TYPE_V1
 
 @Slf4j
 @RestController
@@ -27,10 +24,13 @@ class PresentController {
 
     private Trace trace
 
+    private AggregatrClient aggregatrClient
+
     @Autowired
-    public PresentController(FeedRepository feedRepository, Trace trace) {
+    public PresentController(FeedRepository feedRepository, Trace trace, AggregatrClient aggregatrClient) {
         this.feedRepository = feedRepository
         this.trace = trace
+        this.aggregatrClient = aggregatrClient
     }
 
     @RequestMapping(
@@ -39,15 +39,10 @@ class PresentController {
     public String order(HttpEntity<String> body) {
         log.info("Making new order with $body.body")
         TraceScope scope = this.trace.startSpan("calling_aggregatr",
-                new AlwaysSampler(), null);
-        /*String result = restClient.forService(Collaborators.AGGREGATR_DEPENDENCY_NAME).post().onUrl("/ingredients")
-                .body(body.body)
-                    .withHeaders().contentType(AGREGATR_CONTENT_TYPE_V1)
-                .andExecuteFor()
-                .anObject()
-                .ofType(String)
-        */scope.close()
-        return ''//result
+                new AlwaysSampler(), null)
+        String result = aggregatrClient.ingredients
+        scope.close()
+        return result
     }
 
     @RequestMapping(value = "/dojrzewatr", method = GET)

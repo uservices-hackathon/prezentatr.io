@@ -101,6 +101,7 @@ dependencies {
     compile "org.springframework:spring-context-support:+"
     compile 'com.fasterxml.jackson.core:jackson-databind'
     compile "org.springframework.cloud:spring-cloud-starter-zipkin:+"
+    compile "org.springframework.cloud:spring-cloud-starter-feign:+"
     compile "org.codehaus.jackson:jackson-mapper-asl:$jacksonMapper"
     compile "org.codehaus.jackson:jackson-core-asl:$jacksonMapper"
     compile 'com.google.guava:guava:18.0'
@@ -115,6 +116,7 @@ dependencies {
     compile "de.codecentric:spring-boot-admin-starter-client:1.2.3"
     compile 'org.jolokia:jolokia-core'
     compile 'org.codehaus.groovy:groovy-all:2.4.5'
+
 
     runtime 'cglib:cglib-nodep:3.1'
     runtime 'org.objenesis:objenesis:2.2'
