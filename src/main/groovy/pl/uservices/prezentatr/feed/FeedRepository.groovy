@@ -28,8 +28,8 @@ class FeedRepository {
     }
 
     String showStatuses() {
-        return "DOJRZEWATR: ${countFor(ProcessState.DOJRZEWATR)}\n" +
-                "BUTELKATR: ${countFor(ProcessState.BUTELKATR)}"
+        return "MATURING: ${countFor(ProcessState.MATURING)}\n" +
+                "BOTTLING: ${countFor(ProcessState.BOTTLING)}"
     }
 
     Integer countFor(ProcessState state) {
@@ -48,7 +48,7 @@ class Process {
 }
 
 enum ProcessState {
-    DOJRZEWATR,
-    BUTELKATR,
+    MATURING,
+    BOTTLING,
     DONE
 }

@@ -1,4 +1,4 @@
-spring.application.name: prezentatr
+spring.application.name: presenting
 
 logging:
   pattern:

@@ -24,13 +24,13 @@ class PresentController {
 
     private TraceManager traceManager
 
-    private AggregatrClient aggregatrClient
+    private AggregationServiceClient aggregationServiceClient
 
     @Autowired
-    public PresentController(FeedRepository feedRepository, TraceManager traceManager, AggregatrClient aggregatrClient) {
+    public PresentController(FeedRepository feedRepository, TraceManager traceManager, AggregationServiceClient aggregationServiceClient) {
         this.feedRepository = feedRepository
         this.traceManager = traceManager
-        this.aggregatrClient = aggregatrClient
+        this.aggregationServiceClient = aggregationServiceClient
     }
 
     @RequestMapping(
@@ -38,21 +38,21 @@ class PresentController {
             method = POST)
     public String order(HttpEntity<String> body) {
         log.info("Making new order with $body.body")
-        Trace trace = this.traceManager.startSpan("calling_aggregatr",
+        Trace trace = this.traceManager.startSpan("calling_aggregation",
                 new AlwaysSampler(), null)
-        String result = aggregatrClient.getIngredients(body.body, trace.getSpan().getTraceId())
+        String result = aggregationServiceClient.getIngredients(body.body, trace.getSpan().getTraceId())
         traceManager.close(trace)
         return result
     }
 
-    @RequestMapping(value = "/dojrzewatr", method = GET)
+    @RequestMapping(value = "/maturing", method = GET)
     public String dojrzewatr() {
-        return feedRepository.countFor(ProcessState.DOJRZEWATR)
+        return feedRepository.countFor(ProcessState.MATURING)
     }
 
-    @RequestMapping(value = "/butelkatr", method = GET)
+    @RequestMapping(value = "/bottling", method = GET)
     public String butelkatr() {
-        return feedRepository.countFor(ProcessState.BUTELKATR)
+        return feedRepository.countFor(ProcessState.BOTTLING)
     }
 
     @RequestMapping(value = "/bottles", method = GET)

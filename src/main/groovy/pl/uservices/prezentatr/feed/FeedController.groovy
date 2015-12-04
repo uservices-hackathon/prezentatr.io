@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET
 import static org.springframework.web.bind.annotation.RequestMethod.PUT
-import static pl.uservices.prezentatr.config.Versions.PREZENTATR_JSON_VERSION_1
+import static pl.uservices.prezentatr.config.Versions.PRESENTING_JSON_VERSION_1
 
 @Slf4j
 @RestController
@@ -25,29 +25,29 @@ class FeedController {
     }
 
     @RequestMapping(
-            value = "/dojrzewatr",
-            produces = PREZENTATR_JSON_VERSION_1,
-            consumes = PREZENTATR_JSON_VERSION_1,
+            value = "/maturing",
+            produces = PRESENTING_JSON_VERSION_1,
+            consumes = PRESENTING_JSON_VERSION_1,
             method = PUT)
     public String dojrzewatr(@RequestHeader("PROCESS-ID") String processId) {
-        log.info("new dojrzewatr")
-        feedRepository.addModifyProcess(processId, ProcessState.DOJRZEWATR)
+        log.info("new maturing")
+        feedRepository.addModifyProcess(processId, ProcessState.MATURING)
     }
 
     @RequestMapping(
-            value = "/butelkatr",
-            produces = PREZENTATR_JSON_VERSION_1,
-            consumes = PREZENTATR_JSON_VERSION_1,
+            value = "/bottling",
+            produces = PRESENTING_JSON_VERSION_1,
+            consumes = PRESENTING_JSON_VERSION_1,
             method = PUT)
     public String butelkatr(@RequestHeader("PROCESS-ID") String processId) {
-        log.info("new butelkatr")
-        feedRepository.addModifyProcess(processId, ProcessState.BUTELKATR)
+        log.info("new bottling")
+        feedRepository.addModifyProcess(processId, ProcessState.BOTTLING)
     }
 
     @RequestMapping(
             value = "/bottles/{bottles}",
-            produces = PREZENTATR_JSON_VERSION_1,
-            consumes = PREZENTATR_JSON_VERSION_1,
+            produces = PRESENTING_JSON_VERSION_1,
+            consumes = PRESENTING_JSON_VERSION_1,
             method = PUT)
     public String bottles(@PathVariable Integer bottles, @RequestHeader("PROCESS-ID") String processId) {
         log.info("bottles number: ${bottles}")

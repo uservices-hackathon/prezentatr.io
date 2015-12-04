@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import pl.uservices.prezentatr.config.Versions
 
-@FeignClient("aggregatr")
-@RequestMapping(value = "/ingredients", consumes = Versions.AGREGATR_CONTENT_TYPE_V1, produces = MediaType.APPLICATION_JSON_VALUE)
-interface AggregatrClient {
+@FeignClient("aggregating")
+@RequestMapping(value = "/ingredients", consumes = Versions.AGGREGATING_CONTENT_TYPE_V1, produces = MediaType.APPLICATION_JSON_VALUE)
+interface AggregationServiceClient {
 
     @RequestMapping(method = RequestMethod.POST)
     String getIngredients(String body, @RequestHeader("PROCESS-ID") String processId)
