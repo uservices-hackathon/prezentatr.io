@@ -50,9 +50,9 @@ configurations {
                 if (details.requested.name == 'servlet-api') {
                     details.useTarget("org.apache.tomcat.embed:tomcat-embed-core:8.0.23")
                 }
-                if (details.requested.group.contains('org.springframework')) {
+                /*if (details.requested.group.contains('org.springframework')) {
                     details.useVersion('+')
-                }
+                }*/
             }
         }
     }
@@ -74,9 +74,9 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework:spring-context-support"
     compile 'com.fasterxml.jackson.core:jackson-databind'
-    compile "org.springframework.cloud:spring-cloud-starter-zookeeper-discovery"
-    compile "org.springframework.cloud:spring-cloud-starter-zipkin"
-    compile "org.springframework.cloud:spring-cloud-starter-feign"
+    compile "org.springframework.cloud:spring-cloud-starter-zookeeper-discovery:1.0.0.BUILD-SNAPSHOT"
+    compile "org.springframework.cloud:spring-cloud-starter-zipkin:1.0.0.BUILD-SNAPSHOT"
+    compile "org.springframework.cloud:spring-cloud-starter-feign:+"
     compile "org.codehaus.jackson:jackson-mapper-asl:$jacksonMapper"
     compile "org.codehaus.jackson:jackson-core-asl:$jacksonMapper"
     compile 'com.google.guava:guava:18.0'

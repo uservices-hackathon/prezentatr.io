@@ -6,3 +6,5 @@ logging:
 
 server:
   port: 9090
+
+spring.cloud.zookeeper.discovery.root: /pl

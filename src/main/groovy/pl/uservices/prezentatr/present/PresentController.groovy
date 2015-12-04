@@ -3,7 +3,7 @@ import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.sleuth.Trace
-import org.springframework.cloud.sleuth.TraceScope
+import org.springframework.cloud.sleuth.TraceManager
 import org.springframework.cloud.sleuth.sampler.AlwaysSampler
 import org.springframework.http.HttpEntity
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,14 +22,14 @@ class PresentController {
 
     private FeedRepository feedRepository
 
-    private Trace trace
+    private TraceManager traceManager
 
     private AggregatrClient aggregatrClient
 
     @Autowired
-    public PresentController(FeedRepository feedRepository, Trace trace, AggregatrClient aggregatrClient) {
+    public PresentController(FeedRepository feedRepository, TraceManager traceManager, AggregatrClient aggregatrClient) {
         this.feedRepository = feedRepository
-        this.trace = trace
+        this.traceManager = traceManager
         this.aggregatrClient = aggregatrClient
     }
 
@@ -38,10 +38,10 @@ class PresentController {
             method = POST)
     public String order(HttpEntity<String> body) {
         log.info("Making new order with $body.body")
-        TraceScope scope = this.trace.startSpan("calling_aggregatr",
+        Trace scope = this.traceManager.startSpan("calling_aggregatr",
                 new AlwaysSampler(), null)
         String result = aggregatrClient.ingredients
-        scope.close()
+        traceManager.close(scope)
         return result
     }
 
