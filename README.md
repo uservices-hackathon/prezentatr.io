@@ -1,5 +1,4 @@
 # Presentation service
 
-TODO:
-- add zookeeper
-- fix logging pattern
+- Calls aggregation service once a request comes in
+- Polls maturing and bottling services for data

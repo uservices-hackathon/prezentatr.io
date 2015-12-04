@@ -12,9 +12,7 @@ buildscript {
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:+"
-        classpath 'com.ofg:uptodate-gradle-plugin:+'
         classpath 'se.transmode.gradle:gradle-docker:1.2'
-        classpath 'com.blogspot.toomuchcoding:gradle-test-profiler:0.3.1'
         classpath 'org.ajoberstar:gradle-git:0.12.0'
 
         if (project.hasProperty("coverage")) {
@@ -26,9 +24,7 @@ buildscript {
 apply plugin: 'groovy'
 apply plugin: 'spring-boot'
 apply plugin: 'maven-publish'
-apply plugin: 'com.ofg.uptodate'
 apply plugin: 'docker'
-apply plugin: 'com.blogspot.toomuchcoding.testprofiler'
 
 ext {
     buildNrLoc = project.hasProperty('buildNr') ? "${buildNr}" : "CD-000"
@@ -54,34 +50,12 @@ configurations {
                 if (details.requested.name == 'servlet-api') {
                     details.useTarget("org.apache.tomcat.embed:tomcat-embed-core:8.0.23")
                 }
-                if (details.requested.group == 'org.springframework') {
+                if (details.requested.group.contains('org.springframework')) {
                     details.useVersion('+')
                 }
             }
         }
     }
-}
-
-test {
-    jvmArgs = project.gradle.startParameter.systemPropertiesArgs.entrySet().collect{"-D${it.key}=${it.value}"} + ['-Xmx512m']
-    testLogging {
-        exceptionFormat = 'full'
-    }
-    exclude '**/*UISpec.*'
-}
-
-task guiTest(type: Test) {
-    jvmArgs project.gradle.startParameter.systemPropertiesArgs.entrySet().collect{"-D${it.key}=${it.value}"}
-    testLogging {
-        exceptionFormat = 'full'
-    }
-    include '**/*UISpec.*'
-
-    reports.html {
-        destination = file("${reporting.baseDir}/guiTests")
-    }
-    group = "Verification"
-    description = "Runs the acceptance GUI tests with Geb."
 }
 
 repositories {
@@ -96,12 +70,13 @@ repositories {
 }
 
 dependencies {
-    compile "org.springframework.boot:spring-boot-starter-web:+"
-    compile "org.springframework.boot:spring-boot-starter-actuator:+"
-    compile "org.springframework:spring-context-support:+"
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework:spring-context-support"
     compile 'com.fasterxml.jackson.core:jackson-databind'
-    compile "org.springframework.cloud:spring-cloud-starter-zipkin:+"
-    compile "org.springframework.cloud:spring-cloud-starter-feign:+"
+    compile "org.springframework.cloud:spring-cloud-starter-zookeeper-discovery"
+    compile "org.springframework.cloud:spring-cloud-starter-zipkin"
+    compile "org.springframework.cloud:spring-cloud-starter-feign"
     compile "org.codehaus.jackson:jackson-mapper-asl:$jacksonMapper"
     compile "org.codehaus.jackson:jackson-core-asl:$jacksonMapper"
     compile 'com.google.guava:guava:18.0'
@@ -116,7 +91,6 @@ dependencies {
     compile "de.codecentric:spring-boot-admin-starter-client:1.2.3"
     compile 'org.jolokia:jolokia-core'
     compile 'org.codehaus.groovy:groovy-all:2.4.5'
-
 
     runtime 'cglib:cglib-nodep:3.1'
     runtime 'org.objenesis:objenesis:2.2'
@@ -145,17 +119,6 @@ task docker(type: Docker) {
     addFile("${libsDir}/${project.name}-${buildNrLoc}.jar", "/${project.name}/${project.name}.jar")
     exposePort(8095)
     entryPoint(['java', '-jar', "/${project.name}/${project.name}.jar"])
-}
-
-testprofiler {
-    minTestThreshold = 100
-
-    buildBreaker {
-        maxTestThreshold = project.hasProperty('maxTestThreshold') ? project.property('maxTestThreshold') : 30_000
-        ifTestsExceedMaxThreshold {
-            displayWarning()
-        }
-    }
 }
 
 //Make sure that fat jar is built before uploading
@@ -187,7 +150,7 @@ String getProp(String propName) {
 }
 
 wrapper {
-    gradleVersion '2.2.1'
+    gradleVersion '2.9'
 }
 
 task addHashFile << {
@@ -213,15 +176,4 @@ jar {
 
 bootRepackage {
     withJarTask = "jar"
-}
-
-task bootRunDev(type: org.springframework.boot.gradle.run.BootRunTask) {
-    group = 'Application'
-    doFirst() {
-        main = project.mainClassName
-        classpath = sourceSets.main.runtimeClasspath
-        systemProperty 'APP_ENV', 'dev'
-        systemProperty 'CONFIG_FOLDER', 'properties'
-        systemProperty 'spring.profiles.active', 'dev,springCloud'
-    }
 }

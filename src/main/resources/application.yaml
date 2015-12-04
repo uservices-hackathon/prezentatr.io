@@ -1,1 +1,8 @@
 spring.application.name: prezentatr
+
+logging:
+  pattern:
+    level: '%clr([trace=%X{X-Trace-Id:-},span=%X{X-Span-Id:-}]){yellow} %5p'
+
+server:
+  port: 9090
