@@ -38,10 +38,10 @@ class PresentController {
             method = POST)
     public String order(HttpEntity<String> body) {
         log.info("Making new order with $body.body")
-        Trace scope = this.traceManager.startSpan("calling_aggregatr",
+        Trace trace = this.traceManager.startSpan("calling_aggregatr",
                 new AlwaysSampler(), null)
-        String result = aggregatrClient.ingredients
-        traceManager.close(scope)
+        String result = aggregatrClient.getIngredients(body.body, trace.getSpan().getTraceId())
+        traceManager.close(trace)
         return result
     }
 

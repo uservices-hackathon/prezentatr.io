@@ -1,10 +1,9 @@
 package pl.uservices.prezentatr.feed
-
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.cloud.sleuth.trace.TraceContextHolder
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -30,9 +29,9 @@ class FeedController {
             produces = PREZENTATR_JSON_VERSION_1,
             consumes = PREZENTATR_JSON_VERSION_1,
             method = PUT)
-    public String dojrzewatr() {
+    public String dojrzewatr(@RequestHeader("PROCESS-ID") String processId) {
         log.info("new dojrzewatr")
-        feedRepository.addModifyProcess(TraceContextHolder.currentSpan?.traceId, ProcessState.DOJRZEWATR)
+        feedRepository.addModifyProcess(processId, ProcessState.DOJRZEWATR)
     }
 
     @RequestMapping(
@@ -40,9 +39,9 @@ class FeedController {
             produces = PREZENTATR_JSON_VERSION_1,
             consumes = PREZENTATR_JSON_VERSION_1,
             method = PUT)
-    public String butelkatr() {
+    public String butelkatr(@RequestHeader("PROCESS-ID") String processId) {
         log.info("new butelkatr")
-        feedRepository.addModifyProcess(TraceContextHolder.currentSpan?.traceId, ProcessState.BUTELKATR)
+        feedRepository.addModifyProcess(processId, ProcessState.BUTELKATR)
     }
 
     @RequestMapping(
@@ -50,9 +49,9 @@ class FeedController {
             produces = PREZENTATR_JSON_VERSION_1,
             consumes = PREZENTATR_JSON_VERSION_1,
             method = PUT)
-    public String bottles(@PathVariable Integer bottles) {
+    public String bottles(@PathVariable Integer bottles, @RequestHeader("PROCESS-ID") String processId) {
         log.info("bottles number: ${bottles}")
-        feedRepository.setBottles(TraceContextHolder.currentSpan?.traceId, bottles)
+        feedRepository.setBottles(processId, bottles)
     }
 
     @RequestMapping(

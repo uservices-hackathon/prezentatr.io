@@ -2,6 +2,7 @@ package pl.uservices.prezentatr.present
 
 import org.springframework.cloud.netflix.feign.FeignClient
 import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import pl.uservices.prezentatr.config.Versions
@@ -11,5 +12,5 @@ import pl.uservices.prezentatr.config.Versions
 interface AggregatrClient {
 
     @RequestMapping(method = RequestMethod.POST)
-    String getIngredients()
+    String getIngredients(String body, @RequestHeader("PROCESS-ID") String processId)
 }

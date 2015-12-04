@@ -50,9 +50,6 @@ configurations {
                 if (details.requested.name == 'servlet-api') {
                     details.useTarget("org.apache.tomcat.embed:tomcat-embed-core:8.0.23")
                 }
-                /*if (details.requested.group.contains('org.springframework')) {
-                    details.useVersion('+')
-                }*/
             }
         }
     }

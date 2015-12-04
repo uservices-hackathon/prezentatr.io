@@ -8,3 +8,4 @@ server:
   port: 9090
 
 spring.cloud.zookeeper.discovery.root: /pl
+spring.sleuth.instrument.web.skipPattern: /api-docs.*|/autoconfig|/configprops|/dump|/info|/metrics.*|/mappings|/trace|/swagger.*|.*\.png|.*\.css|.*\.js|.*\.html|/favicon.ico|/hystrix.stream|/feed.*|/present.*
