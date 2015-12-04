@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod
 import pl.uservices.prezentatr.config.Versions
 
 @FeignClient("aggregating")
-@RequestMapping(value = "/ingredients", consumes = Versions.AGGREGATING_CONTENT_TYPE_V1, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/ingredients",
+        consumes = Versions.AGGREGATING_CONTENT_TYPE_V1, produces = MediaType.APPLICATION_JSON_VALUE)
 interface AggregationServiceClient {
 
     @RequestMapping(method = RequestMethod.POST)
