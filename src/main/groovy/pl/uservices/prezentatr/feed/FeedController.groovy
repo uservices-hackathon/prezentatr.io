@@ -29,9 +29,9 @@ class FeedController {
             produces = PRESENTING_JSON_VERSION_1,
             consumes = PRESENTING_JSON_VERSION_1,
             method = PUT)
-    public String dojrzewatr(@RequestHeader("PROCESS-ID") String processId) {
+    public String maturing(@RequestHeader("PROCESS-ID") String processId) {
         log.info("new maturing")
-        feedRepository.addModifyProcess(processId, ProcessState.MATURING)
+        return feedRepository.addModifyProcess(processId, ProcessState.MATURING)
     }
 
     @RequestMapping(
@@ -39,9 +39,9 @@ class FeedController {
             produces = PRESENTING_JSON_VERSION_1,
             consumes = PRESENTING_JSON_VERSION_1,
             method = PUT)
-    public String butelkatr(@RequestHeader("PROCESS-ID") String processId) {
+    public String bottling(@RequestHeader("PROCESS-ID") String processId) {
         log.info("new bottling")
-        feedRepository.addModifyProcess(processId, ProcessState.BOTTLING)
+        return feedRepository.addModifyProcess(processId, ProcessState.BOTTLING)
     }
 
     @RequestMapping(
@@ -51,7 +51,7 @@ class FeedController {
             method = PUT)
     public String bottles(@PathVariable Integer bottles, @RequestHeader("PROCESS-ID") String processId) {
         log.info("bottles number: ${bottles}")
-        feedRepository.setBottles(processId, bottles)
+        return feedRepository.setBottles(processId, bottles)
     }
 
     @RequestMapping(

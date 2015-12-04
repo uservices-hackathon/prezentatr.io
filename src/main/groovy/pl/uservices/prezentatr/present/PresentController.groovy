@@ -66,7 +66,7 @@ class PresentController {
         HttpMethod method = HttpMethod.POST
         String bodyAsString = body.body
         RequestEntity<String> requestEntity = new RequestEntity<>(bodyAsString, headers, method, uri);
-        return restTemplate.exchange(requestEntity, String.class);
+        return restTemplate.exchange(requestEntity, String.class).body;
     }
 
     private String useFeignToCallAggregation(HttpEntity<String> body, Trace trace) {
